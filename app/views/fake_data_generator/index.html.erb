@@ -1,0 +1,47 @@
+<!-- index.html.erb -->
+<div class="flex flex-col justify-center items-center">
+  <div class="my-10 w-full">
+    <%= form_tag('#', method: 'post', 'data-turbo-frame': 'replace', class: 'flex justify-center items-center') do %>
+      <div class="mr-4 flex justify-center items-center">
+        <%= label_tag(:region, 'Region', class: 'block mr-2 text-sm font-medium text-gray-700') %>
+        <%= select_tag(:region, options_for_select(['USA', 'Russia', 'Ukraine', 'Polish']), class: 'mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500') %>
+      </div>
+      <div class="mr-4 flex justify-center items-center">
+        <%= label_tag(:error_count, 'Error Count', class: 'block mr-2 text-sm font-medium text-gray-700') %>
+        <%= range_field_tag(:error_count, 0, in: 0..10, step: 0.25, class: 'mt-1 block w-full') %>
+        <%= number_field_tag(:error_count, 0, in: 0..1000, class: 'mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500') %>
+      </div>
+      <div class="mr-4 flex justify-center items-center">
+        <%= label_tag(:seed, 'Seed', class: 'block mr-2 text-sm font-medium text-gray-700') %>
+        <%= number_field_tag(:seed, 0, min: 0, class: 'mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500') %>
+      </div>
+      <div>
+        <%= button_tag('Random', type: 'button', class: 'w-full inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-gray-600 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500') %>
+      </div>
+    <% end %>
+  </div>
+  <div>
+    <table class="table-auto">
+      <thead>
+        <tr>
+          <th class="px-4 py-2">Index</th>
+          <th class="px-4 py-2">Identifier</th>
+          <th class="px-4 py-2">Name</th>
+          <th class="px-4 py-2">Address</th>
+          <th class="px-4 py-2">Phone</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @generated_data.each do |data| %>
+          <tr>
+            <td class="border px-4 py-2"><%= data[:index] %></td>
+            <td class="border px-4 py-2"><%= data[:identifier] %></td>
+            <td class="border px-4 py-2"><%= data[:name] %></td>
+            <td class="border px-4 py-2"><%= data[:address] %></td>
+            <td class="border px-4 py-2"><%= data[:phone] %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
