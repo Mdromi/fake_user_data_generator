@@ -1,3 +1,3 @@
 class ApplicationController < ActionController::Base
-    include FakerHelper
+    # include FakerHelper
 end

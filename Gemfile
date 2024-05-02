@@ -58,3 +58,5 @@ group :development do
 end
 
 gem 'faker'
+gem 'sidekiq'
+gem 'redis-rails'

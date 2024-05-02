@@ -7,4 +7,9 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   root "fake_data_generator#index"
+  post "/generate-data", to: "fake_data_generator#generate_data"
+  post "/generate-random-seed", to: "fake_data_generator#generate_random_seed_data"
+  post "/load-more-data", to: "fake_data_generator#load_more_data"
+
+  get "/export-csv", to: "fake_data_generator#export_csv"
 end

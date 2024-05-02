@@ -3,7 +3,7 @@ require 'faker'
 module Constants
   REGION_LANGUAGE_MAP = {
     'USA' => Faker::Config.locale = :en,
-    'Australia' => Faker::Config.locale = :en_AU,
+    'German' => Faker::Config.locale = :de,
     'Russia' => Faker::Config.locale = :ru,
     'Polish' => Faker::Config.locale = :pl,
   }.freeze

@@ -1,24 +1,30 @@
-<!-- index.html.erb -->
-<div class="flex flex-col justify-center items-center">
-  <div class="my-10 w-full">
-    <%= form_tag('#', method: 'post', 'data-turbo-frame': 'replace', class: 'flex justify-center items-center') do %>
-      <div class="mr-4 flex justify-center items-center">
-        <%= label_tag(:region, 'Region', class: 'block mr-2 text-sm font-medium text-gray-700') %>
-        <%= select_tag(:region, options_for_select(['USA', 'Russia', 'Ukraine', 'Polish']), class: 'mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500') %>
-      </div>
-      <div class="mr-4 flex justify-center items-center">
-        <%= label_tag(:error_count, 'Error Count', class: 'block mr-2 text-sm font-medium text-gray-700') %>
-        <%= range_field_tag(:error_count, 0, in: 0..10, step: 0.25, class: 'mt-1 block w-full') %>
-        <%= number_field_tag(:error_count, 0, in: 0..1000, class: 'mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500') %>
-      </div>
-      <div class="mr-4 flex justify-center items-center">
-        <%= label_tag(:seed, 'Seed', class: 'block mr-2 text-sm font-medium text-gray-700') %>
-        <%= number_field_tag(:seed, 0, min: 0, class: 'mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500') %>
-      </div>
+<div>
+  <div class="flex flex-col justify-center items-center">
+    <div class="my-10 w-full" data-controller="data-form">
+      <%= form_with(url: '', method: 'post', 'data-turbo-frame': 'data-form', remote: true, class: 'flex justify-center items-center', id: 'data-form') do |f| %>
+        <div class="mr-4 flex justify-center items-center">
+          <%= f.label(:region, 'Region', class: 'block mr-2 text-sm font-medium text-gray-700') %>
+          <%= f.select(:region, ['USA', 'Russia', 'German', 'Polish'], id: 'region', class: 'mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500') %>
+        </div>
+        <div class="mr-4 flex justify-center items-center">
+          <%= f.label(:error_count, 'Error Count', class: 'block mr-2 text-sm font-medium text-gray-700') %>
+          <%= f.range_field(:error_count2, in: 0..10, step: 0.25, value: 0, class: 'mt-1 block w-full', id: 'error_count_input') %>
+          <%= f.number_field(:error_count, in: 0..1000, value: 0, id: 'error_count_input_display',  class: 'mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500') %>
+        </div>
+        <div class="mr-4 flex justify-center items-center">
+          <%= f.label(:seed, 'Seed', class: 'block mr-2 text-sm font-medium text-gray-700') %>
+          <%# f.number_field(:seed, min: 0, value: 0, id: 'seed', class: 'mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500') %>
+          <%= f.number_field(:seed, min: 0, value: @random_seed, id: 'seed', class: 'mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500') %>
+        </div>
+        <div>
+          <%# f.button('Random', data: { action: "click->data-form#randomData" }, class: 'w-full inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-gray-600 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500') %>
+          <%= f.button('Random', class: 'w-full inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-gray-600 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500') %>
+        </div>
+      <% end %>
       <div>
-        <%= button_tag('Random', type: 'button', class: 'w-full inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-gray-600 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500') %>
+        <%= link_to "Download CSV", "/export-csv", class: "mt-4 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500", data: { turbo_frame: false } %>
       </div>
-    <% end %>
+    </div>
   </div>
   <div>
     <table class="table-auto">
@@ -33,7 +39,7 @@
       </thead>
       <tbody>
         <% @generated_data.each do |data| %>
-          <tr>
+          <tr id="generated_data_<%= data[:identifier] %>">
             <td class="border px-4 py-2"><%= data[:index] %></td>
             <td class="border px-4 py-2"><%= data[:identifier] %></td>
             <td class="border px-4 py-2"><%= data[:name] %></td>
@@ -44,4 +50,5 @@
       </tbody>
     </table>
   </div>
+</div>
 </div>

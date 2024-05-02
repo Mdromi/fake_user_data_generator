@@ -24,8 +24,11 @@ module FakerHelper
   end
 
   def set_faker_seed(seed, page = 0)
-    Faker::Config.random = Random.new(seed)
+    combined_seed = "#{seed}#{page}"
+    hashed_seed = Digest::SHA256.hexdigest(combined_seed)
+    Faker::Config.random = Random.new(hashed_seed.to_i(16))
   end
+  
 
   def generate_user_data(region, index)
     Faker::Config.locale = Constants::REGION_LANGUAGE_MAP[region]
@@ -37,19 +40,34 @@ module FakerHelper
   end
 
   def add_character(str, index)
+    return str if str.nil?
+    return str if str.length - 1 < index
+  
+    # Count the number of spaces in the string
+    space_count = str.count(' ')
+    
+    # Check if the maximum space limit (3) is reached and the character at the index is a space
+    return str if space_count >= 3 && str[index] == ' '
+    
+    # Insert the character at the specified index
     str.insert(index, str[index])
   end
+  
 
   def delete_character(str, index)
+    return str if str.nil? || index.nil? || index < 0 || index >= str.length || str.length <= 10
+  
     str.slice(0, index) + str.slice(index + 1..-1)
   end
+  
 
   def swap_characters(str, index)
-    if index == str.length - 1
-      str.slice(0, index - 1) + str[index] + str[index - 1]
-    else
-      str[index], str[index + 1] = str[index + 1], str[index]
-      str
-    end
+    return str if str.nil? || index.nil? || index < 0 || index >= str.length - 1
+  
+    temp = str[index]
+    str[index] = str[index + 1]
+    str[index + 1] = temp
+    str
   end
+
 end
