@@ -34,9 +34,9 @@ export default class extends Controller {
     window.addEventListener("scroll", () => {
       const { scrollTop, clientHeight, scrollHeight } =
         document.documentElement;
-      console.log(scrollTop, clientHeight, scrollHeight);
-      if (scrollTop + clientHeight >= scrollHeight - 10) {
+      if (scrollTop + clientHeight >= scrollHeight) {
         const currentRowCount = document.querySelectorAll("tbody tr").length;
+        console.log("currentRowCount", currentRowCount);
         this.loadMoreData(currentRowCount);
       }
     });

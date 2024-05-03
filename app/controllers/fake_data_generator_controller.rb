@@ -57,7 +57,8 @@ class FakeDataGeneratorController < ApplicationController
     faker_instance = Faker::Config.locale
     set_faker_seed(seed)
     generator = Generator.new(region)
-    last_row_count = @@generated_data.length
+    # last_row_count = @@generated_data.empty? ? 20 : @@generated_data.length
+
 
     generated_data = (1..load_data).map do |index|
       userData = generate_user_data(region, last_row_count + index)
