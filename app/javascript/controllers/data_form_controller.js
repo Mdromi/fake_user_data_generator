@@ -6,7 +6,6 @@ export default class extends Controller {
     // Get the range and number input fields
     const rangeField = this.element.querySelector("input[type='range']");
     const numberField = this.element.querySelector("input[type='number']");
-    const exportBtn = this.element.querySelector("#export-csv-btn");
     const form = this.element.querySelector("form");
 
     // Add event listeners to update each other's values
@@ -33,47 +32,44 @@ export default class extends Controller {
       this.randomData(event);
     });
     window.addEventListener("scroll", () => {
-      const { scrollTop, clientHeight, scrollHeight } = document.documentElement;
+      const { scrollTop, clientHeight, scrollHeight } =
+        document.documentElement;
+      console.log(scrollTop, clientHeight, scrollHeight);
       if (scrollTop + clientHeight >= scrollHeight - 10) {
-          this.loadMoreData();
+        const currentRowCount = document.querySelectorAll("tbody tr").length;
+        this.loadMoreData(currentRowCount);
       }
-  });
-  
+    });
   }
 
-  async loadMoreData() {
-    const currentRowCount = document.querySelectorAll("tbody tr").length;
-    // await this.refreshData(event);
-    const newRowCount = document.querySelectorAll("tbody tr").length;
-    if (newRowCount === currentRowCount) {
-      // No new data loaded, indicating end of data
-      const { region, seed, rangeMax, numberMax } = this.getFormData();
+  async loadMoreData(currentRowCount) {
+    // No new data loaded, indicating end of data
+    const { region, seed, rangeMax, numberMax } = this.getFormData();
 
-      const maxErrorCount = Math.max(rangeMax, numberMax);
+    const maxErrorCount = Math.max(rangeMax, numberMax);
 
-      const response = await fetch("/load-more-data", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-CSRF-Token": document
-            .querySelector("meta[name='csrf-token']")
-            .getAttribute("content"),
-        },
-        body: JSON.stringify({
-          region: region,
-          error_count: maxErrorCount,
-          seed: seed,
-          last_row_count: currentRowCount,
-        }),
-      });
+    const response = await fetch("/load-more-data", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRF-Token": document
+          .querySelector("meta[name='csrf-token']")
+          .getAttribute("content"),
+      },
+      body: JSON.stringify({
+        region: region,
+        error_count: maxErrorCount,
+        seed: seed,
+        last_row_count: currentRowCount,
+      }),
+    });
 
-      const data = await response.json();
+    const data = await response.json();
 
-      // Update the table with the new data
-      data.forEach((item) => {
-        this.createAndAppendRow(item);
-      });
-    }
+    // Update the table with the new data
+    data.forEach((item) => {
+      this.createAndAppendRow(item);
+    });
   }
 
   async randomData(event) {

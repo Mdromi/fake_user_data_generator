@@ -4,8 +4,7 @@ require "csv"
 class FakeDataGeneratorController < ApplicationController
   include FakerHelper
   include FakeDataGeneratorHelper
-
-  @@generated_data = [] 
+  @@generated_data = []
 
   def index
     @@generated_data = []
@@ -47,10 +46,7 @@ class FakeDataGeneratorController < ApplicationController
   end
 
   def export_csv
-    # Generate CSV data
     csv_data = generate_csv_data(@@generated_data)
-
-    # Send CSV data as response
     send_data csv_data, filename: "generated_users.csv", type: "text/csv"
   end
 
@@ -61,6 +57,7 @@ class FakeDataGeneratorController < ApplicationController
     faker_instance = Faker::Config.locale
     set_faker_seed(seed)
     generator = Generator.new(region)
+    last_row_count = @@generated_data.length
 
     generated_data = (1..load_data).map do |index|
       userData = generate_user_data(region, last_row_count + index)
@@ -71,6 +68,8 @@ class FakeDataGeneratorController < ApplicationController
         identifier: userData[:identifier],
       }
     end
+    # FakeDataGeneratorWorker.perform_async(region, error_count, last_row_count, load_data)
+    # render json: { message: "Data generation job has been enqueued" }
 
     @@generated_data += generated_data
     generated_data
@@ -78,7 +77,7 @@ class FakeDataGeneratorController < ApplicationController
 
   def generate_csv_data(data)
     CSV.generate(headers: true) do |csv|
-      csv << data.first.keys # Write headers
+      csv << data.first.keys
       data.each do |item|
         csv << item.values
       end
