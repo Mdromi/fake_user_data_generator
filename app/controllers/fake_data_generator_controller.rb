@@ -5,14 +5,16 @@ class FakeDataGeneratorController < ApplicationController
   include FakerHelper
   include FakeDataGeneratorHelper
 
+  @@generated_data = [] 
+
   def index
-    session[:generated_data] = [] 
+    @@generated_data = []
     @generated_data = generate_fake_data
     @random_seed = 0
   end
 
   def generate_data
-    session[:generated_data] = [] 
+    @@generated_data = []
     region = params[:region]
     seed = params[:seed]
     error_count = params[:error_count].to_i
@@ -24,7 +26,7 @@ class FakeDataGeneratorController < ApplicationController
   end
 
   def generate_random_seed_data
-    session[:generated_data] = [] 
+    @@generated_data = []
     @random_seed = generate_random_seed
     respond_to do |format|
       format.json { render json: @random_seed }
@@ -46,7 +48,7 @@ class FakeDataGeneratorController < ApplicationController
 
   def export_csv
     # Generate CSV data
-    csv_data = generate_csv_data(session[:generated_data])
+    csv_data = generate_csv_data(@@generated_data)
 
     # Send CSV data as response
     send_data csv_data, filename: "generated_users.csv", type: "text/csv"
@@ -70,11 +72,7 @@ class FakeDataGeneratorController < ApplicationController
       }
     end
 
-    if session[:generated_data].nil?
-      session[:generated_data] = generated_data
-    else
-      session[:generated_data] += generated_data
-    end
+    @@generated_data += generated_data
     generated_data
   end
 
